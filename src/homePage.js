@@ -48,13 +48,6 @@ const HomePage = () => {
     alert('Cost added successfully');
   };
 
-  const handleDeleteCost = (index) => {
-    const updatedInputList = [...inputList];
-    updatedInputList.splice(index, 1);
-    setInputList(updatedInputList);
-    idb.addCost(updatedInputList);
-  };
-
   return (
     <div className="expense-container">
       <h1>Add your expense here</h1>

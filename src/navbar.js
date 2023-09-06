@@ -11,9 +11,8 @@ const Navbar = () => {
             </a>
 
             <div className="links_container">
-                <Link to="/" className="links">Home</Link>
                 <Link to="/report" className="links">Report</Link>
-
+                <Link to="/" className="links">Home</Link>
             </div>
         </nav>
     );

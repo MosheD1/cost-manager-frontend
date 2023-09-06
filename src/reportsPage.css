@@ -1,56 +1,55 @@
-/* Updated class names */
 .expense-report-container {
-    margin: 10px auto;
     display: flex;
-    flex-direction: column;
-    gap: 20px;
-    padding-bottom: 50px;
+    margin: 10px auto;
     align-items: center;
+    gap: 20px;
+    flex-direction: column;
+    padding-bottom: 50px;
 }
 
 .report-headline {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     font-size: 50px;
     font-weight: 700;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
 }
 
 .select-controls {
-    display: flex;
-    flex-direction: row;
     gap: 0.5rem;
     align-items: baseline;
+    display: flex;
+    flex-direction: row;
 }
 
 .select-label {
-    font-size: 18px;
     font-weight: 500;
+    font-size: 18px;
 }
 
 .select-input {
-    font-size: 100%;
-    padding: 0.3em;
-    outline: none;
     background-color: white;
     display: flex;
+    font-size: 100%;
+    outline: none;
+    padding: 0.3em;
 }
 
 .show-expenses-button {
-    display: flex;
-    padding: 15px 15px;
-    border-radius: 25px;
-    border: none;
-    background-color: #23C483FF;
-    cursor: pointer;
-    color: white;
     font-size: 18px;
     font-weight: 500;
+    border-radius: 25px;
+    border: none;
+    color: white;
+    background-color: #23C483FF;
+    cursor: pointer;
+    display: flex;
+    padding: 15px 15px;
 }
 
 .show-expenses-button:hover {
-    background-color: #23C483FF;
     opacity: 0.8;
+    background-color: #23C483FF;
     transition: 0.3s;
 }
 
@@ -63,14 +62,14 @@
 }
 
 .expense-table th {
-    background-color: rgba(4, 28, 65, 0.3);
     color: white;
+    background-color: rgba(4, 28, 65, 0.3);
 }
 
 .expense-table th, td {
-    border: 1px solid black;
     padding: 8px;
     text-align: center;
+    border: 1px solid black;
 }
 
 .expense-table tr:hover {
@@ -78,11 +77,11 @@
 }
 
 .expense-total {
-    font-size: 24px;
     font-weight: 500;
+    font-size: 24px;
 }
 
 .total-amount {
-    color: #23C483FF;
     font-weight: 600;
+    color: #23C483FF;
 }
