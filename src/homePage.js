@@ -56,10 +56,10 @@ const HomePage = () => {
   };
 
   return (
-    <div className="HomePage">
+    <div className="expense-container">
       <h1>Add your expense here</h1>
-      <div className="form-container">
-        <div className="inputGroup">
+      <div className="expense-form">
+        <div className="form-group">
           <label htmlFor="name">Date:</label>
           <input
             type="date"
@@ -70,7 +70,7 @@ const HomePage = () => {
             max={today}
           />
         </div>
-        <div className="inputGroup">
+        <div className="form-group">
           <label>Item: </label>
           <input
             type="text"
@@ -78,7 +78,7 @@ const HomePage = () => {
             onChange={(e) => setInputItem(e.target.value)}
           />
         </div>
-        <div className="inputGroup">
+        <div className="form-group">
           <label>Price: </label>
           <input
             type="number"
@@ -86,7 +86,7 @@ const HomePage = () => {
             onChange={(e) => setInputPrice(e.target.value)}
           />
         </div>
-        <div className="inputGroup">
+        <div className="form-group">
           <label>Category:</label>
           <select
             value={inputCategory}
@@ -104,41 +104,42 @@ const HomePage = () => {
             <option value="others">Others</option>
           </select>
         </div>
-        <div className="inputGroup">
+        <div className="form-group">
           <label>Description: </label>
           <textarea
             value={inputDescription}
             onChange={(e) => setInputDescription(e.target.value)}
             placeholder="Enter description"
+            className="expense-description"
           ></textarea>
         </div>
-        <div className="submit-cost">
-          <button className="add-cost" id="plus" onClick={handleAddCost}>
+        <div className="submit-section">
+          <button className="add-button" id="plus" onClick={handleAddCost}>
             Add cost
           </button>
           {inputError && <p className="error">{inputError}</p>}
         </div>
       </div>
-      <table>
+      <table className="expense-table">
         <thead>
           <tr>
-            <th>Date</th>
-            <th>Item</th>
-            <th>Price</th>
-            <th>Category</th>
-            <th>Description</th>
-            <th>Delete item</th>
+            <th className="table-header">Date</th>
+            <th className="table-header">Item</th>
+            <th className="table-header">Price</th>
+            <th className="table-header">Category</th>
+            <th className="table-header">Description</th>
+            <th className="table-header">Delete item</th>
           </tr>
         </thead>
         <tbody>
           {inputList.map((input, index) => (
-            <tr key={index}>
-              <td>{input.date}</td>
-              <td>{input.item}</td>
-              <td>{input.price}</td>
-              <td>{input.category}</td>
-              <td>{input.description}</td>
-              <td>
+            <tr key={index} className="table-row">
+              <td className="table-data">{input.date}</td>
+              <td className="table-data">{input.item}</td>
+              <td className="table-data">{input.price}</td>
+              <td className="table-data">{input.category}</td>
+              <td className="table-data">{input.description}</td>
+              <td className="table-data">
                 <button
                   className="delete-button"
                   onClick={() => handleDeleteCost(index)}
