@@ -3,13 +3,13 @@ import './homePage.css';
 import idb from './idb';
 
 const HomePage = () => {
-  const [inputDate, setInputDate] = useState('');
-  const [inputItem, setInputItem] = useState('');
-  const [inputPrice, setInputPrice] = useState('');
-  const [inputCategory, setInputCategory] = useState('food');
-  const [inputDescription, setInputDescription] = useState('');
-  const [inputList, setInputList] = useState([]);
   const [inputError, setInputError] = useState('');
+  const [inputItem, setInputItem] = useState('');
+  const [inputList, setInputList] = useState([]);
+  const [inputDate, setInputDate] = useState('');
+  const [inputCategory, setInputCategory] = useState('food');
+  const [inputPrice, setInputPrice] = useState('');
+  const [inputDescription, setInputDescription] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,19 +32,19 @@ const HomePage = () => {
     }
     setInputError('');
     const newCost = {
-      date: inputDate,
-      item: inputItem,
-      price: inputPrice,
       category: inputCategory,
+      item: inputItem,
       description: inputDescription,
+      date: inputDate,
+      price: inputPrice,
     };
     setInputList([...inputList, newCost]);
     idb.addCost([...inputList, newCost]);
-    setInputDate('');
-    setInputItem('');
-    setInputPrice('');
     setInputCategory('food');
     setInputDescription('');
+    setInputDate('');
+    setInputPrice('');
+    setInputItem('');
     alert('Cost added successfully');
   };
 
@@ -62,28 +62,28 @@ const HomePage = () => {
         <div className="form-group">
           <label htmlFor="name">Date:</label>
           <input
-            type="date"
-            value={inputDate}
-            onChange={(e) => setInputDate(e.target.value)}
             required
-            autoComplete="off"
+            type="date"
             max={today}
+            onChange={(e) => setInputDate(e.target.value)}
+            value={inputDate}
+            autoComplete="off"
           />
         </div>
         <div className="form-group">
           <label>Item: </label>
           <input
-            type="text"
             value={inputItem}
             onChange={(e) => setInputItem(e.target.value)}
+            type="text"
           />
         </div>
         <div className="form-group">
           <label>Price: </label>
           <input
-            type="number"
-            value={inputPrice}
             onChange={(e) => setInputPrice(e.target.value)}
+            value={inputPrice}
+            type="number"
           />
         </div>
         <div className="form-group">
@@ -108,49 +108,21 @@ const HomePage = () => {
           <label>Description: </label>
           <textarea
             value={inputDescription}
+            className="expense-description"
             onChange={(e) => setInputDescription(e.target.value)}
             placeholder="Enter description"
-            className="expense-description"
           ></textarea>
         </div>
         <div className="submit-section">
-          <button className="add-button" id="plus" onClick={handleAddCost}>
+          <button
+            onClick={handleAddCost}
+            className="add-button" 
+            id="plus">
             Add cost
           </button>
           {inputError && <p className="error">{inputError}</p>}
         </div>
       </div>
-      <table className="expense-table">
-        <thead>
-          <tr>
-            <th className="table-header">Date</th>
-            <th className="table-header">Item</th>
-            <th className="table-header">Price</th>
-            <th className="table-header">Category</th>
-            <th className="table-header">Description</th>
-            <th className="table-header">Delete item</th>
-          </tr>
-        </thead>
-        <tbody>
-          {inputList.map((input, index) => (
-            <tr key={index} className="table-row">
-              <td className="table-data">{input.date}</td>
-              <td className="table-data">{input.item}</td>
-              <td className="table-data">{input.price}</td>
-              <td className="table-data">{input.category}</td>
-              <td className="table-data">{input.description}</td>
-              <td className="table-data">
-                <button
-                  className="delete-button"
-                  onClick={() => handleDeleteCost(index)}
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
     </div>
   );
 };

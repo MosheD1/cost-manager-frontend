@@ -89,7 +89,7 @@ const ReportsPage = () => {
           <option value="" disabled>
             Select a month
           </option>
-          {Array.from({ length: 12 }, (_, i) => {
+          {Array.from({ length: 12 }, (item, i) => {
             const month = new Date(0, i).toLocaleString('en-US', {
               month: 'long',
             });
