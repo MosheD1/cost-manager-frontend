@@ -1,136 +1,142 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import './reportsPage.css';
 import idb from './idb.js';
 
 const ReportsPage = () => {
+  useEffect(() => {
+    const fetchData = async () => {
+      const costFromDb = await idb.getAllCosts();
+      if (costFromDb) {
+        setExpenses(costFromDb);
+      }
+    };
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const costFromDb = await idb.getAllCosts();
-            if (costFromDb) {
-                setExpenses(costFromDb);
-            }
-        }
+    document.title = 'Reports';
+    fetchData();
+  }, []);
 
-        document.title = 'Reports';
-        fetchData();
-    }, []);
+  const [selectedYear, setSelectedYear] = useState('');
+  const [selectedMonth, setSelectedMonth] = useState('');
+  const [expenses, setExpenses] = useState([]);
+  const [totalExpenses, setTotalExpenses] = useState(0);
+  const [filteredExpenses, setFilteredExpenses] = useState([]);
+  const [categories, setCategories] = useState({});
 
-    const [selectedYear, setSelectedYear] = useState('');
-    const [selectedMonth, setSelectedMonth] = useState('');
-    const [expenses, setExpenses] = useState([]);
-    const [totalExpenses, setTotalExpenses] = useState(0);
-    const [filteredExpenses, setFilteredExpenses] = useState([]);
+  useEffect(() => {
+    if (selectedYear && selectedMonth) {
+      const filtered = expenses.filter(
+        (exp) =>
+          new Date(exp.date).getFullYear().toString() === selectedYear &&
+          new Date(exp.date).getMonth().toString() === selectedMonth
+      );
+      setFilteredExpenses(filtered);
+    }
+  }, [selectedYear, selectedMonth, expenses]);
 
-    const categories = {};
-    filteredExpenses.forEach(expense => {
-        if (categories[expense.category]) {
-            categories[expense.category] += parseInt(expense.price);
-        } else {
-            categories[expense.category] = parseInt(expense.price);
-        }
+  useEffect(() => {
+    let total = 0;
+    let filteredCategories = {};
+    filteredExpenses.forEach((expense) => {
+        const {price, category} = expense;
+      total += parseInt(price);
+      filteredCategories[category] = (category in filteredCategories ? 
+        filteredCategories[category] + parseInt(price) : parseInt(price));
     });
 
-    useEffect(() => {
-        console.log("change", expenses);
-    }, [expenses]);
+    setCategories(filteredCategories);
+    setTotalExpenses(total);
+  }, [filteredExpenses]);
 
+  const calculateTotalExpenses = () => {
+    if (selectedYear && selectedMonth) {
+      setFilteredExpenses([]);
+      const total = filteredExpenses.reduce(
+        (acc, expense) => acc + parseInt(expense.price),
+        0
+      );
+      setTotalExpenses(total);
+    } else {
+      alert('Please select a year and a month');
+    }
+  };
 
-    const calculateTotalExpenses = () => {
-        if (selectedYear && selectedMonth) {
-            let total = 0;
-            const filtered = expenses.filter(exp => new Date(exp.date).getFullYear().toString() === selectedYear && new Date(exp.date).getMonth().toString() === selectedMonth);
-            console.log("filtered", filtered);
-            setFilteredExpenses(filtered);
-
-            filteredExpenses.forEach(expense => {
-                total += parseInt(expense.price);
+  return (
+    <div className="expense-report-container">
+      <h1 className="report-headline">Expense Report</h1>
+      <div className="select-controls">
+        <label className="select-label">Year</label>
+        <select
+          className="select-input"
+          value={selectedYear}
+          onChange={(e) => setSelectedYear(e.target.value)}
+        >
+          <option value="" disabled>
+            Select a year
+          </option>
+          {Array.from({ length: 5 }, (_, i) => {
+            const year = 2019 + i;
+            return <option key={year} value={year}>{year}</option>;
+          })}
+        </select>
+      </div>
+      <div className="select-controls">
+        <label className="select-label">Month</label>
+        <select
+          className="select-input"
+          value={selectedMonth}
+          onChange={(e) => setSelectedMonth(e.target.value)}
+        >
+          <option value="" disabled>
+            Select a month
+          </option>
+          {Array.from({ length: 12 }, (_, i) => {
+            const month = new Date(0, i).toLocaleString('en-US', {
+              month: 'long',
             });
-            setTotalExpenses(total);
-        } else {
-            alert('Please select a year and a month');
-        }
-    };
-    useEffect(() => {
-        let total = 0;
-        filteredExpenses.forEach(expense => {
-            total += parseInt(expense.price);
-        });
-        setTotalExpenses(total);
-    }, [filteredExpenses]);
-
-    return (
-        <div className="reportsPage">
-            <h1 className="headline">Expense Report</h1>
-            <div className="select-container">
-                <label className="label">Year</label>
-                <select className="select" value={selectedYear} onChange={e => setSelectedYear(e.target.value)}>
-                    <option value="" disabled>Select a year</option>
-                    <option value="2019">2019</option>
-                    <option value="2020">2020</option>
-                    <option value="2021">2021</option>
-                    <option value="2022">2022</option>
-                    <option value="2023">2023</option>
-                </select>
-            </div>
-            <div className="select-container">
-                <label className="label">Month</label>
-                <select className="select" value={selectedMonth} onChange={e => setSelectedMonth(e.target.value)}>
-                    <option value="" disabled>Select a month</option>
-                    <option value="0">January</option>
-                    <option value="1">February</option>
-                    <option value="2">March</option>
-                    <option value="3">April</option>
-                    <option value="4">May</option>
-                    <option value="5">June</option>
-                    <option value="6">July</option>
-                    <option value="7">August</option>
-                    <option value="8">September</option>
-                    <option value="9">October</option>
-                    <option value="10">November</option>
-                    <option value="11">December</option>
-                    ...
-                </select>
-            </div>
-            <div>
-                <button className="submit" onClick={calculateTotalExpenses}>Show expenses</button>
-            </div>
-            {filteredExpenses.length > 0 && (
-                <table>
-                    <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Item</th>
-                        <th>Price</th>
-                        <th>Category</th>
-                        <th>Description</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {filteredExpenses.map((expense, index) => (
-                        <tr key={index}>
-                            <td>{expense.date}</td>
-                            <td>{expense.item}</td>
-                            <td>{expense.price}</td>
-                            <td>{expense.category}</td>
-                            <td>{expense.description}</td>
-                        </tr>
-                    ))}
-                    </tbody>
-                </table>
-            )}
-            <div>
-                <p className="total-expenses">Total expenses for selected period: <span
-                    className="total-number">{totalExpenses} ILS</span></p>
-            </div>
-            <div>
-                <p className="total-expenses">Expenses by category:</p>
-                {Object.keys(categories).map(category => (
-                    <p key={category}>{category}: {categories[category]} ILS</p>
-                ))}
-            </div>
-        </div>
-    )
-}
+            return <option key={i} value={i}>{month}</option>;
+          })}
+        </select>
+      </div>
+      <div>
+        <button className="show-expenses-button" onClick={calculateTotalExpenses}>
+          Show expenses
+        </button>
+      </div>
+      {filteredExpenses.length > 0 && (
+        <table className="expense-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Item</th>
+              <th>Price</th>
+              <th>Category</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredExpenses.map((expense, index) => (
+              <tr key={index}>
+                <td>{expense.date}</td>
+                <td>{expense.item}</td>
+                <td>{expense.price}</td>
+                <td>{expense.category}</td>
+                <td>{expense.description}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+      <div>
+        <p className="expense-total">Total expenses for selected period: <span className="total-amount">{totalExpenses} ILS</span></p>
+      </div>
+      <div>
+        <p className="expense-total">Expenses by category:</p>
+        {Object.keys(categories).map((category) => (
+          <p key={category}>{category}: {categories[category]} ILS</p>
+        ))}
+      </div>
+    </div>
+  );
+};
 
 export default ReportsPage;
