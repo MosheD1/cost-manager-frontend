@@ -1,3 +1,7 @@
+/*
+    Moshe Dego 315044511
+    Omri Elbaz 315006635
+*/
 import React, { useState, useEffect } from 'react';
 import './homePage.css';
 import idb from './idb';

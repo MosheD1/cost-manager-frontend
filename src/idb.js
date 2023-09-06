@@ -1,4 +1,7 @@
-// idb.js
+/*
+    Moshe Dego 315044511
+    Omri Elbaz 315006635
+*/
 
 const idb = {
   db: null,
