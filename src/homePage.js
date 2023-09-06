@@ -3,19 +3,19 @@ import './homePage.css';
 import idb from './idb';
 
 const HomePage = () => {
-  const [date, setDate] = useState('');
-  const [item, setItem] = useState('');
-  const [price, setPrice] = useState('');
-  const [category, setCategory] = useState('food');
-  const [description, setDescription] = useState('');
-  const [inputs, setInputs] = useState([]);
-  const [error, setError] = useState('');
+  const [inputDate, setInputDate] = useState('');
+  const [inputItem, setInputItem] = useState('');
+  const [inputPrice, setInputPrice] = useState('');
+  const [inputCategory, setInputCategory] = useState('food');
+  const [inputDescription, setInputDescription] = useState('');
+  const [inputList, setInputList] = useState([]);
+  const [inputError, setInputError] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
       const costFromDb = await idb.getAllCosts();
       if (costFromDb) {
-        setInputs(costFromDb);
+        setInputList(costFromDb);
       }
     };
 
@@ -26,27 +26,33 @@ const HomePage = () => {
   const today = new Date().toISOString().slice(0, 10);
 
   const handleAddCost = () => {
-    if (!date || !item || !price) {
+    if (!inputDate || !inputItem || !inputPrice) {
       alert('Please enter all fields');
       return;
     }
-    setError('');
-    const newCost = { date, item, price, category, description };
-    setInputs([...inputs, newCost]);
-    idb.addCost([...inputs, newCost]);
-    setDate('');
-    setItem('');
-    setPrice('');
-    setCategory('food');
-    setDescription('');
+    setInputError('');
+    const newCost = {
+      date: inputDate,
+      item: inputItem,
+      price: inputPrice,
+      category: inputCategory,
+      description: inputDescription,
+    };
+    setInputList([...inputList, newCost]);
+    idb.addCost([...inputList, newCost]);
+    setInputDate('');
+    setInputItem('');
+    setInputPrice('');
+    setInputCategory('food');
+    setInputDescription('');
     alert('Cost added successfully');
   };
 
   const handleDeleteCost = (index) => {
-    const updatedInputs = [...inputs];
-    updatedInputs.splice(index, 1);
-    setInputs(updatedInputs);
-    idb.addCost(updatedInputs);
+    const updatedInputList = [...inputList];
+    updatedInputList.splice(index, 1);
+    setInputList(updatedInputList);
+    idb.addCost(updatedInputList);
   };
 
   return (
@@ -57,8 +63,8 @@ const HomePage = () => {
           <label htmlFor="name">Date:</label>
           <input
             type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
+            value={inputDate}
+            onChange={(e) => setInputDate(e.target.value)}
             required
             autoComplete="off"
             max={today}
@@ -68,23 +74,23 @@ const HomePage = () => {
           <label>Item: </label>
           <input
             type="text"
-            value={item}
-            onChange={(e) => setItem(e.target.value)}
+            value={inputItem}
+            onChange={(e) => setInputItem(e.target.value)}
           />
         </div>
         <div className="inputGroup">
           <label>Price: </label>
           <input
             type="number"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
+            value={inputPrice}
+            onChange={(e) => setInputPrice(e.target.value)}
           />
         </div>
         <div className="inputGroup">
           <label>Category:</label>
           <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
+            value={inputCategory}
+            onChange={(e) => setInputCategory(e.target.value)}
           >
             <option value="food">Food</option>
             <option value="personalSpending">Personal spending</option>
@@ -101,8 +107,8 @@ const HomePage = () => {
         <div className="inputGroup">
           <label>Description: </label>
           <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            value={inputDescription}
+            onChange={(e) => setInputDescription(e.target.value)}
             placeholder="Enter description"
           ></textarea>
         </div>
@@ -110,7 +116,7 @@ const HomePage = () => {
           <button className="add-cost" id="plus" onClick={handleAddCost}>
             Add cost
           </button>
-          {error && <p className="error">{error}</p>}
+          {inputError && <p className="error">{inputError}</p>}
         </div>
       </div>
       <table>
@@ -125,7 +131,7 @@ const HomePage = () => {
           </tr>
         </thead>
         <tbody>
-          {inputs.map((input, index) => (
+          {inputList.map((input, index) => (
             <tr key={index}>
               <td>{input.date}</td>
               <td>{input.item}</td>
