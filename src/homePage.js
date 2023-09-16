@@ -50,7 +50,7 @@ const HomePage = () => {
       price: inputPrice,
     };
     setInputList([...inputList, newCost]);
-    idb.addCost([...inputList, newCost]);
+    idb.addMultipleCosts([...inputList, newCost]);
     setInputCategory('food');
     setInputDescription('');
     setInputDate('');

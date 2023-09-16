@@ -6,14 +6,20 @@
 const idb = {
   db: null,
   dbName: 'costsDB',
-  dbVersion: 1,
   objectStoreName: 'costs',
 
   //function to open the indexedDB db
   openCostsDB: async () => {
     if (!idb.db) {
       //open a connection to db
-      const request = indexedDB.open(idb.dbName, idb.dbVersion);
+      const request = indexedDB.open(idb.dbName);
+
+      request.onupgradeneeded = (event) => {
+        const db = event.target.result;
+        if (!db.objectStoreNames.contains(idb.objectStoreName)) {
+          db.createObjectStore(idb.objectStoreName, { keyPath: 'id', autoIncrement: true });
+        }
+      };
 
       //when request return we resolve/reject based to the result
       idb.db = await new Promise((resolve, reject) => {
@@ -31,6 +37,29 @@ const idb = {
   addCost: async (costItem) => {
     //open a connection to db
     const db = await idb.openCostsDB();
+    // start a read-only transaction
+    const transaction = db.transaction([idb.objectStoreName], 'readwrite');
+    const store = transaction.objectStore(idb.objectStoreName);
+
+    return new Promise((resolve, reject) => {
+      const request = store.add(costItem);
+
+      //handler for request success
+      request.onsuccess = () => {
+        resolve(true);
+      };
+
+      //handler for request error
+      request.onerror = () => {
+        reject(request.error);
+      };
+    });
+  },
+
+  //function to add a multiple new cost items to the db
+  addMultipleCosts: async (costItems) => {
+    //open a connection to db
+    const db = await idb.openCostsDB();
     // Start a read-only transaction
     const transaction = db.transaction([idb.objectStoreName], 'readwrite');
     const store = transaction.objectStore(idb.objectStoreName);
@@ -44,7 +73,7 @@ const idb = {
     });
 
     //looping over items and add them to store
-    for (const item of costItem) {
+    for (const item of costItems) {
       let request = store.add(item);
 
       const promise = new Promise((resolve, reject) => {
