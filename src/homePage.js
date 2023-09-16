@@ -12,7 +12,6 @@ import idb from './idb';
 const HomePage = () => {
   const [inputError, setInputError] = useState('');
   const [inputItem, setInputItem] = useState('');
-  const [inputList, setInputList] = useState([]);
   const [inputDate, setInputDate] = useState('');
   const [inputCategory, setInputCategory] = useState('food');
   const [inputPrice, setInputPrice] = useState('');

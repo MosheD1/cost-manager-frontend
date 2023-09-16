@@ -30,7 +30,7 @@ const idb = {
       });
     }
 
-    return idb.db;
+    return idb;
   },
 
   //function to add a new cost item to the db
