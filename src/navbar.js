@@ -2,11 +2,14 @@
     Moshe Dego 315044511
     Omri Elbaz 315006635
 */
+
+//imports that are relavant for the component
 import React from 'react';
 import './navbar.css';
 import AppLogo from './costManagerLogo.avif';
 import {Link} from "react-router-dom";
 
+//navbar component
 const Navbar = () => {
     return (
         <nav className="navbar">

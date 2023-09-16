@@ -2,10 +2,13 @@
     Moshe Dego 315044511
     Omri Elbaz 315006635
 */
+
+//imports that are relavant for the component
 import React, { useState, useEffect } from 'react';
 import './homePage.css';
 import idb from './idb';
 
+//home page component
 const HomePage = () => {
   const [inputError, setInputError] = useState('');
   const [inputItem, setInputItem] = useState('');
@@ -15,7 +18,9 @@ const HomePage = () => {
   const [inputPrice, setInputPrice] = useState('');
   const [inputDescription, setInputDescription] = useState('');
 
+
   useEffect(() => {
+    //get data in indexDB
     const fetchData = async () => {
       const costFromDb = await idb.getAllCosts();
       if (costFromDb) {
@@ -27,8 +32,10 @@ const HomePage = () => {
     fetchData();
   }, []);
 
-  const today = new Date().toISOString().slice(0, 10);
+  //get date in format of dd/mm/yyyy
+  const getTodayDate = () => new Date().toISOString().slice(0, 10);
 
+  // function to handle add cost logic once the user click on add
   const handleAddCost = () => {
     if (!inputDate || !inputItem || !inputPrice) {
       alert('Please enter all fields');
@@ -52,6 +59,7 @@ const HomePage = () => {
     alert('Cost added successfully');
   };
 
+  //the component to render
   return (
     <div className="expense-container">
       <h1>Add your expense here</h1>
@@ -61,7 +69,7 @@ const HomePage = () => {
           <input
             required
             type="date"
-            max={today}
+            max={getTodayDate()}
             onChange={(e) => setInputDate(e.target.value)}
             value={inputDate}
             autoComplete="off"

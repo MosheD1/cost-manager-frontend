@@ -2,12 +2,16 @@
     Moshe Dego 315044511
     Omri Elbaz 315006635
 */
+
+//imports relevant to the reportsPAge Component
 import React, { useState, useEffect } from 'react';
 import './reportsPage.css';
 import idb from './idb.js';
 
+//reportsPage Component
 const ReportsPage = () => {
   
+  //states
   const [selectedYear, setSelectedYear] = useState('');
   const [selectedMonth, setSelectedMonth] = useState('');
   const [expenses, setExpenses] = useState([]);
@@ -15,6 +19,7 @@ const ReportsPage = () => {
   const [filteredExpenses, setFilteredExpenses] = useState([]);
   const [categories, setCategories] = useState({});
   
+  //use effect to load data from indexDB
   useEffect(() => {
     const fetchData = async () => {
       const costFromDb = await idb.getAllCosts();
@@ -27,6 +32,7 @@ const ReportsPage = () => {
     fetchData();
   }, []);
 
+  //calculate expenses of click
   const calculateTotalExpenses = () => {
     if (selectedYear && selectedMonth) {
       const filtered = expenses.filter(
@@ -35,6 +41,8 @@ const ReportsPage = () => {
           new Date(exp.date).getMonth().toString() === selectedMonth
       );
       const { total, filteredCategories} = getExpensesDetails(filtered);
+
+      //set values to state
       setFilteredExpenses(filtered);
       setCategories(filteredCategories);
       setTotalExpenses(total);
@@ -43,6 +51,7 @@ const ReportsPage = () => {
     }
   };
 
+  //function to get relevant exprense details
   const getExpensesDetails = (expenses) => {
     let total = 0;
     let filteredCategories = {};

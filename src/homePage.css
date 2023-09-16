@@ -2,6 +2,7 @@
     Moshe Dego 315044511
     Omri Elbaz 315006635
 */
+/* css style that is relevant to homePage component */
 .expense-container {
     padding-bottom: 49px;
     display: flex;
@@ -17,7 +18,7 @@
 }
 
 .expense-form {
-    background-color: antiquewhite;
+    background-color: #f5fae3;
     box-shadow: 6px 9px;
     width: 299px;
     display: flex;

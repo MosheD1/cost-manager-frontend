@@ -2,6 +2,7 @@
     Moshe Dego 315044511
     Omri Elbaz 315006635
 */
+/* css style that is relevant for the reportsPage component */
 .expense-report-container {
     display: flex;
     margin: 9px auto;

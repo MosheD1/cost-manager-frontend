@@ -9,7 +9,7 @@ const idb = {
   dbVersion: 1,
   objectStoreName: 'costs',
 
-  // Function to open the IndexedDB database
+  // function to open the indexedDB db
   openCostsDB: async () => {
     if (!idb.db) {
       const request = indexedDB.open(idb.dbName, idb.dbVersion);
@@ -32,7 +32,7 @@ const idb = {
     return idb.db;
   },
 
-  // Function to add a new cost item to the database
+  // function to add a new cost item to the db
   addCost: async (costItem) => {
     const db = await idb.openCostsDB();
     const transaction = db.transaction([idb.objectStoreName], 'readwrite');
@@ -66,7 +66,7 @@ const idb = {
     await Promise.allSettled(promises);
   },
 
-  // Function to retrieve all existing cost items from the database
+  // function to retrieve all existing cost items from the database
   getAllCosts: async () => {
     const db = await idb.openCostsDB();
     const transaction = db.transaction([idb.objectStoreName], 'readonly');
@@ -100,6 +100,7 @@ const idb = {
     });
   },
 
+  // function to get cost items by year and month
   getCostsByMonthYear: async (month, year) => {
     const db = await idb.openCostsDB();
     const transaction = db.transaction([idb.objectStoreName], 'readonly');

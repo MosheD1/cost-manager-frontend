@@ -2,6 +2,7 @@
     Moshe Dego 315044511
     Omri Elbaz 315006635
 */
+/* css style that is relevant for the navbar component */
 .navbar {
     display: flex;
     border-bottom: 1px solid #f2f2f2;
@@ -17,8 +18,9 @@
 .links {
     border-radius: 8px;
     margin: 20px 10px 20px 0;
-    background-color: darksalmon;
-    color: white;
+    background-color: #f0fac5;
+    color: black;
+    border: 1px solid rgba(0, 0, 0, 0.3);
 }
 
 .navbar .links {
