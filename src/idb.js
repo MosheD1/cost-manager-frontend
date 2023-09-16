@@ -9,18 +9,13 @@ const idb = {
   dbVersion: 1,
   objectStoreName: 'costs',
 
-  // function to open the indexedDB db
+  //function to open the indexedDB db
   openCostsDB: async () => {
     if (!idb.db) {
+      //open a connection to db
       const request = indexedDB.open(idb.dbName, idb.dbVersion);
 
-      request.onupgradeneeded = (event) => {
-        const db = event.target.result;
-        if (!db.objectStoreNames.contains(idb.objectStoreName)) {
-          db.createObjectStore(idb.objectStoreName, { keyPath: 'id', autoIncrement: true });
-        }
-      };
-
+      //when request return we resolve/reject based to the result
       idb.db = await new Promise((resolve, reject) => {
         request.onsuccess = () => {
           resolve(request.result);
@@ -32,30 +27,34 @@ const idb = {
     return idb.db;
   },
 
-  // function to add a new cost item to the db
+  //function to add a new cost item to the db
   addCost: async (costItem) => {
+    //open a connection to db
     const db = await idb.openCostsDB();
+    // Start a read-only transaction
     const transaction = db.transaction([idb.objectStoreName], 'readwrite');
     const store = transaction.objectStore(idb.objectStoreName);
     const promises = [];
 
+    //clear the store
     const clearRequest = store.clear();
     await new Promise((resolve, reject) => {
       clearRequest.onsuccess = () => resolve();
       clearRequest.onerror = () => reject(clearRequest.error);
     });
 
+    //looping over items and add them to store
     for (const item of costItem) {
-      console.log(item);
       let request = store.add(item);
 
       const promise = new Promise((resolve, reject) => {
+        //handler for request success
         request.onsuccess = () => {
-          console.log('sucess')
           resolve(true);
         }
+
+        //handler for cursor request error
         request.onerror = () => {
-          console.log('failed', request.error);
           reject(request.error);
         }
       });
@@ -63,37 +62,44 @@ const idb = {
       promises.push(promise);
     }
 
+    //waiting for all promises to finish
     await Promise.allSettled(promises);
   },
 
   // function to retrieve all existing cost items from the database
   getAllCosts: async () => {
+    //open connection to db
     const db = await idb.openCostsDB();
+    // Start a read-only transaction
     const transaction = db.transaction([idb.objectStoreName], 'readonly');
     const store = transaction.objectStore(idb.objectStoreName);
     const results = [];
 
     return new Promise((resolve, reject) => {
+      //handler for transaction request success
       transaction.oncomplete = () => {
-        console.log('results', results);
         resolve(results);
       };
 
+      //handler for transaction request error
       transaction.onerror = (event) => {
         reject(event.target.error);
       };
 
+      // Open a cursor to iterate through the object store records
       const cursorRequest = store.openCursor();
 
+      //handler for cursor request success
       cursorRequest.onsuccess = (event) => {
-        console.log(event.target.result, 'asd');
         const cursor = event.target.result;
         if (cursor) {
+          // Add the value to the results array and then continue to the next record
           results.push(cursor.value);
           cursor.continue();
         }
       };
 
+      //handler for cursor request error
       cursorRequest.onerror = (event) => {
         reject(event.target.error);
       };
@@ -103,9 +109,11 @@ const idb = {
   // function to get cost items by year and month
   getCostsByMonthYear: async (month, year) => {
     const db = await idb.openCostsDB();
+    // Start a read-only transaction
     const transaction = db.transaction([idb.objectStoreName], 'readonly');
     const store = transaction.objectStore(idb.objectStoreName);
 
+    //access the index monthYear and create a range for month and year
     const index = store.index('monthYear');
     const range = IDBKeyRange.only(`${month}-${year}`);
     const request = index.openCursor(range);
@@ -113,15 +121,19 @@ const idb = {
     const results = [];
 
     return new Promise((resolve, reject) => {
+      //handler for cursor request success
       request.onsuccess = (event) => {
         const cursor = event.target.result;
         if (cursor) {
+          // Add the value to the results array and then continue to the next record
           results.push(cursor.value);
           cursor.continue();
         } else {
           resolve(results);
         }
       };
+
+      //handler for cursor request error
       request.onerror = () => reject(request.error);
     });
   },

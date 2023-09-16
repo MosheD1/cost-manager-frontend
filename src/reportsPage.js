@@ -55,14 +55,15 @@ const ReportsPage = () => {
   const getExpensesDetails = (expenses) => {
     let total = 0;
     let filteredCategories = {};
+
+    //loop over the expenses and add data to total, filteredCategories
     for (const expense of expenses) {
-      console.log(expense)
       const {price, category} = expense;
       total += parseInt(price);
       filteredCategories[category] = (category in filteredCategories ? 
       filteredCategories[category] + parseInt(price) : parseInt(price));
     }
-    console.log(total, filteredCategories);
+
     return { total, filteredCategories}
   }
 
