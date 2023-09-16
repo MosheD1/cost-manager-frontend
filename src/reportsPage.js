@@ -22,6 +22,7 @@ const ReportsPage = () => {
   //use effect to load data from indexDB
   useEffect(() => {
     const fetchData = async () => {
+      await idb.openCostsDB();
       const costFromDb = await idb.getAllCosts();
       if (costFromDb) {
         setExpenses(costFromDb);

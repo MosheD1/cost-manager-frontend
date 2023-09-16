@@ -20,16 +20,7 @@ const HomePage = () => {
 
 
   useEffect(() => {
-    //get data in indexDB
-    const fetchData = async () => {
-      const costFromDb = await idb.getAllCosts();
-      if (costFromDb) {
-        setInputList(costFromDb);
-      }
-    };
-
     document.title = 'Cost Manager';
-    fetchData();
   }, []);
 
   //get date in format of dd/mm/yyyy
@@ -52,7 +43,7 @@ const HomePage = () => {
   }
 
   // function to handle add cost logic once the user click on add
-  const handleAddCost = () => {
+  const handleAddCost = async () => {
     if (!inputDate || !inputItem || !inputPrice) {
       alert('Please enter all fields');
       return;
@@ -65,14 +56,19 @@ const HomePage = () => {
       date: inputDate,
       price: inputPrice,
     };
-    setInputList([...inputList, newCost]);
-    idb.addMultipleCosts([...inputList, newCost]);
-    setInputCategory('food');
-    setInputDescription('');
-    setInputDate('');
-    setInputPrice('');
-    setInputItem('');
-    alert('Cost added successfully');
+
+    try {
+      await idb.openCostsDB();
+      await idb.addCost(newCost);
+      setInputCategory('food');
+      setInputDescription('');
+      setInputDate('');
+      setInputPrice('');
+      setInputItem('');
+      alert('Cost added successfully');
+    } catch (error) {
+      alert('Failed to add cost item');
+    }
   };
 
   //the component to render
