@@ -34,6 +34,22 @@ const HomePage = () => {
 
   //get date in format of dd/mm/yyyy
   const getTodayDate = () => new Date().toISOString().slice(0, 10);
+  
+  //function to generate list of option for select
+  const getCategoryOptionLists = () => {
+    const categories = {
+      food: 'FOOD',
+      health: 'HEALTH',
+      education: 'EDUCATION',
+      travel: 'TRAVEL',
+      housing: 'HOUSING',
+      other: 'OTHER'
+    }
+    
+    return Object.entries(categories).map(([key, value]) => {
+      return <option value={key}>{value}</option>
+    })
+  }
 
   // function to handle add cost logic once the user click on add
   const handleAddCost = () => {
@@ -97,16 +113,9 @@ const HomePage = () => {
             value={inputCategory}
             onChange={(e) => setInputCategory(e.target.value)}
           >
-            <option value="food">Food</option>
-            <option value="personalSpending">Personal spending</option>
-            <option value="children">Children</option>
-            <option value="rent">Rent</option>
-            <option value="transportation">Transportation</option>
-            <option value="utilities">Utilities</option>
-            <option value="medical">Medical</option>
-            <option value="insurance">Insurance</option>
-            <option value="entertainment">Entertainment</option>
-            <option value="others">Others</option>
+            {
+              getCategoryOptionLists()
+            }
           </select>
         </div>
         <div className="form-group">
