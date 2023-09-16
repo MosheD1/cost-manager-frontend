@@ -7,6 +7,14 @@ import './reportsPage.css';
 import idb from './idb.js';
 
 const ReportsPage = () => {
+  
+  const [selectedYear, setSelectedYear] = useState('');
+  const [selectedMonth, setSelectedMonth] = useState('');
+  const [expenses, setExpenses] = useState([]);
+  const [totalExpenses, setTotalExpenses] = useState(0);
+  const [filteredExpenses, setFilteredExpenses] = useState([]);
+  const [categories, setCategories] = useState({});
+  
   useEffect(() => {
     const fetchData = async () => {
       const costFromDb = await idb.getAllCosts();
@@ -19,50 +27,35 @@ const ReportsPage = () => {
     fetchData();
   }, []);
 
-  const [selectedYear, setSelectedYear] = useState('');
-  const [selectedMonth, setSelectedMonth] = useState('');
-  const [expenses, setExpenses] = useState([]);
-  const [totalExpenses, setTotalExpenses] = useState(0);
-  const [filteredExpenses, setFilteredExpenses] = useState([]);
-  const [categories, setCategories] = useState({});
-
-  useEffect(() => {
+  const calculateTotalExpenses = () => {
     if (selectedYear && selectedMonth) {
       const filtered = expenses.filter(
         (exp) =>
           new Date(exp.date).getFullYear().toString() === selectedYear &&
           new Date(exp.date).getMonth().toString() === selectedMonth
       );
+      const { total, filteredCategories} = getExpensesDetails(filtered);
       setFilteredExpenses(filtered);
-    }
-  }, [selectedYear, selectedMonth, expenses]);
-
-  useEffect(() => {
-    let total = 0;
-    let filteredCategories = {};
-    filteredExpenses.forEach((expense) => {
-        const {price, category} = expense;
-      total += parseInt(price);
-      filteredCategories[category] = (category in filteredCategories ? 
-        filteredCategories[category] + parseInt(price) : parseInt(price));
-    });
-
-    setCategories(filteredCategories);
-    setTotalExpenses(total);
-  }, [filteredExpenses]);
-
-  const calculateTotalExpenses = () => {
-    if (selectedYear && selectedMonth) {
-      setFilteredExpenses([]);
-      const total = filteredExpenses.reduce(
-        (acc, expense) => acc + parseInt(expense.price),
-        0
-      );
+      setCategories(filteredCategories);
       setTotalExpenses(total);
     } else {
       alert('Please select a year and a month');
     }
   };
+
+  const getExpensesDetails = (expenses) => {
+    let total = 0;
+    let filteredCategories = {};
+    for (const expense of expenses) {
+      console.log(expense)
+      const {price, category} = expense;
+      total += parseInt(price);
+      filteredCategories[category] = (category in filteredCategories ? 
+      filteredCategories[category] + parseInt(price) : parseInt(price));
+    }
+    console.log(total, filteredCategories);
+    return { total, filteredCategories}
+  }
 
   return (
     <div className="expense-report-container">
