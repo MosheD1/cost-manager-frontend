@@ -73,8 +73,15 @@ const HomePage = () => {
   //the component to render
   return (
     <div className="expense-container">
-      <h1>Add your expense here</h1>
       <div className="expense-form">
+        <div className="form-group">
+          <label>Item: </label>
+          <input
+            value={inputItem}
+            onChange={(e) => setInputItem(e.target.value)}
+            type="text"
+          />
+        </div>
         <div className="form-group">
           <label htmlFor="name">Date:</label>
           <input
@@ -84,14 +91,6 @@ const HomePage = () => {
             onChange={(e) => setInputDate(e.target.value)}
             value={inputDate}
             autoComplete="off"
-          />
-        </div>
-        <div className="form-group">
-          <label>Item: </label>
-          <input
-            value={inputItem}
-            onChange={(e) => setInputItem(e.target.value)}
-            type="text"
           />
         </div>
         <div className="form-group">

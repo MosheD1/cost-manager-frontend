@@ -19,7 +19,6 @@
 
 .expense-form {
     background-color: #f5fae3;
-    box-shadow: 6px 9px;
     width: 299px;
     display: flex;
     flex-direction: column;
